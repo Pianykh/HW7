@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 
@@ -36,12 +35,11 @@ namespace Ex3
         {
             var isFind = false;
 
-            foreach (var book in _catalog.Where(book => book.Author == author))
+            foreach (var book in _catalog.Where(book => string.Equals(book.Author.ToLower(), author.ToLower(), StringComparison.CurrentCultureIgnoreCase)))
             {
                 Console.WriteLine(book.Title + ", " + book.Author);
                 isFind = true;
             }
-
             if (!isFind)
                 Console.WriteLine($"No books by {author} found");
             
@@ -51,12 +49,11 @@ namespace Ex3
         {
             var isFind = false;
 
-            foreach (var book in _catalog.Where(book => book.Title.Contains(name)))
+            foreach (var book in _catalog.Where(book => book.Title.ToLower().Contains(name.ToLower())))
             {
                 Console.WriteLine(book.Title + ", " + book.Author);
                 isFind = true;
             }
-
             if (!isFind)
                 Console.WriteLine($"No books contains {name} found");
         }
@@ -74,7 +71,6 @@ namespace Ex3
                 book = currentBook;
                 return;
             }
-            
             book = null;
         }
     }

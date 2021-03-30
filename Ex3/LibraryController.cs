@@ -6,29 +6,101 @@ namespace Ex3
 {
     public static class LibraryController
     {
+        private static string _name;
+
         public static void ShowMenu()
         {
-            bool isBookKeeper;
+            var isBookKeeper = false;
             Console.WriteLine("Library. Choose you role: 1. Bookkeeper. 2. Reader");
             while (true)
             {
                 var answer = Console.ReadLine();
+
                 if (answer == "1")
                 {
-                    Console.WriteLine("Welcome bookkeeper. Choose you action: 1. Add book. 2.Delete book 3. Show all books. " +
-                                      "4. Find by author 5. Find by name. 6.Show journal");
                     isBookKeeper = true;
                     break;
                 }
+
                 if (answer == "2")
                 {
-                    Console.WriteLine("Welcome reader. Choose you action: 1. Take book ");
+                    Console.WriteLine("Welcome reader. What is your name?");
+                    _name = Console.ReadLine();
                     break;
                 }
+
                 Console.WriteLine("Please, answer with digits 1 or 2.");
             }
-            Console.WriteLine();
-            switch (Console.WriteLine(answer)){ }
+
+            while (true)
+            {
+                if (!isBookKeeper)
+                    Console.WriteLine($"Welcome {_name}. Choose you action: 1. Show all books. 2. Find by author " +
+                                      "3. Find by title. 4. Take book");
+                else
+                    Console.WriteLine(
+                        "Welcome bookkeeper. Choose you action: 1. Show all books 2. Find by author 3. Find by title. " +
+                        "4. Add book 5. Delete book. 6.Show journal");
+                switch (Console.ReadLine())
+                {
+                    case "1":
+                        Catalog.ShowCatalog();
+                        break;
+                    case "2":
+                        Console.WriteLine("Please, enter the author");
+                        Catalog.FindBooksByAuthor(Console.ReadLine());
+                        break;
+                    case "3":
+                        Console.WriteLine("Please, enter the title");
+                        Catalog.FindBooksByName(Console.ReadLine());
+                        break;
+                    case "4" when isBookKeeper:
+                        var book = new Book();
+                        BookKeeper.AddBookToCatalog(ref book);
+                        break;
+                    case "4":
+                        ReaderTakeBook();
+                        break;
+                    case "5" when isBookKeeper:
+                        BookKeeperDeleteBook();
+                        break;
+                    case "6" when isBookKeeper:
+                        Journal.ShowRecords();
+                        break;
+                }
+
+            }
+
+        }
+
+        private static void ReaderTakeBook()
+        {
+            Console.WriteLine("What title of the book?");
+            var title = Console.ReadLine();
+            Console.WriteLine("What author of the book?");
+            var author = Console.ReadLine();
+            Catalog.GiveAwayBook(title, author, out var book);
+
+            if (book != null)
+            {
+                Console.WriteLine("For how many days did you take the book?");
+                int days = Convert.ToInt16(Console.ReadLine());
+                book.DaysInUse += days;
+                Console.WriteLine($"Book [{title}, {author}] taken");
+                Journal.MakeRecord(_name, book, days);
+            }
+            else
+                Console.WriteLine($"Book [{title}, {author}] is not in the catalog");
+
+        }
+
+        private static void BookKeeperDeleteBook()
+        {
+            Console.WriteLine("What title of the book?");
+            var title = Console.ReadLine();
+            Console.WriteLine("What author of the book?");
+            var author = Console.ReadLine();
+            BookKeeper.DeleteBookFromCatalog(title, author);
         }
     }
 }

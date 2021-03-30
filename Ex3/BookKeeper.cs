@@ -6,7 +6,7 @@ namespace Ex3
 {
     public static class BookKeeper
     {
-        public static void AddBookToCatalog(Book book)
+        public static void AddBookToCatalog(ref Book book)
         {
             Catalog.ReceiveBook(book);
         }

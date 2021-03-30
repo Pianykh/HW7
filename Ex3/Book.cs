@@ -8,7 +8,7 @@ namespace Ex3
     {
         public string Title { get; }
         public string Author { get; }
-        public int DaysInUse { get; set; } = 0;
+        public int DaysInUse { get; set; }
 
         public Book(string title, string author)
         {
@@ -16,7 +16,7 @@ namespace Ex3
             Author = author;
         }
 
-        public Book CreateBook()
+        public Book()
         {
             string title;
             string author;
@@ -27,6 +27,7 @@ namespace Ex3
                 title = Console.ReadLine();
                 if (title != "") break;
                 Console.WriteLine("Title can't be empty");
+                Title = title;
             }
 
             Console.WriteLine("Please, please enter the author of the book");
@@ -35,8 +36,11 @@ namespace Ex3
                 author = Console.ReadLine();
                 if (author != "") break;
                 Console.WriteLine("Author can't be empty");
+                Author = author;
             }
-            return new Book(title, author);
+
+            Author = author;
+            Title = title;
         }
     }
 }
