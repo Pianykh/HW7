@@ -11,7 +11,7 @@ namespace Ex3
         public static void ShowMenu()
         {
             var isBookKeeper = false;
-            Console.WriteLine("Library. Choose you role: 1. Bookkeeper. 2. Reader");
+            Console.WriteLine("Library. Choose you role:\n 1.Bookkeeper\n 2.Reader");
             while (true)
             {
                 var answer = Console.ReadLine();
@@ -35,16 +35,16 @@ namespace Ex3
             while (true)
             {
                 if (!isBookKeeper)
-                    Console.WriteLine($"Welcome {_name}. Choose you action: 1. Show all books. 2. Find by author " +
-                                      "3. Find by title. 4. Take book");
+                    Console.WriteLine($"Welcome {_name}. Choose you action:\n1.Show all books\n2.Find by author\n" +
+                                      "3.Find by title\n4.Take book\n5.Change role to bookkeeper");
                 else
                     Console.WriteLine(
-                        "Welcome bookkeeper. Choose you action: 1. Show all books 2. Find by author 3. Find by title. " +
-                        "4. Add book 5. Delete book. 6.Show journal");
+                        "Welcome bookkeeper. Choose you action:\n1.Show all books\n2.Find by author\n3.Find by title\n" +
+                        "4.Add book\n5.Delete book\n6.Show journal\n7.Change role to reader");
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        Catalog.ShowCatalog();
+                        Catalog.ShowCatalogByAlphabetOrder();
                         break;
                     case "2":
                         Console.WriteLine("Please, enter the author");
@@ -64,13 +64,22 @@ namespace Ex3
                     case "5" when isBookKeeper:
                         BookKeeperDeleteBook();
                         break;
+                    case "5":
+                        isBookKeeper = true;
+                        Console.WriteLine("Role changed");
+                        break;
                     case "6" when isBookKeeper:
                         Journal.ShowRecords();
                         break;
+                    case "7" when isBookKeeper:
+                        isBookKeeper = false;
+                        Console.WriteLine("Role changed");
+                        Console.WriteLine("Welcome reader. What is your name?");
+                        _name = Console.ReadLine();
+                        break;
+                    
                 }
-
             }
-
         }
 
         private static void ReaderTakeBook()
@@ -88,10 +97,10 @@ namespace Ex3
                 book.DaysInUse += days;
                 Console.WriteLine($"Book [{title}, {author}] taken");
                 Journal.MakeRecord(_name, book, days);
+                BookKeeper.AddBookToCatalog(ref book);
             }
             else
                 Console.WriteLine($"Book [{title}, {author}] is not in the catalog");
-
         }
 
         private static void BookKeeperDeleteBook()
